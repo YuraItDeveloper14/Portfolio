@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
+import countriesData from "@/data/countries.json";
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
@@ -19,15 +20,11 @@ export default function Hero() {
   const globeRef = useRef<any>(null);
   const globeContainerRef = useRef<HTMLDivElement>(null);
 
-  const [countries, setCountries] = useState({ features: [] });
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    fetch("https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json")
-      .then((res) => res.json())
-      .then(setCountries)
-      .catch((err) => console.error("Failed to load map data", err));
-  }, []);
+  const [windowSize, setWindowSize] = useState({ 
+    width: typeof window !== "undefined" ? window.innerWidth : 1000, 
+    height: typeof window !== "undefined" ? window.innerHeight : 800 
+  });
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     setWindowSize({ width: window.innerWidth, height: window.innerHeight });
@@ -36,8 +33,10 @@ export default function Hero() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Removed faulty requestAnimationFrame loop that caused zoom issues
+
   useEffect(() => {
-    const proxy = { lat: 20, lng: -90, alt: 1.6 };
+    const proxy = { lat: 20, lng: -90, alt: 1.2 };
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -95,15 +94,26 @@ export default function Hero() {
   return (
     <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-black flex items-center justify-center">
       
-      <div ref={globeContainerRef} className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none will-change-transform">
+      <div 
+        ref={globeContainerRef} 
+        className={`absolute inset-0 z-0 flex items-center justify-center pointer-events-none will-change-transform transition-opacity duration-1000 ${isReady ? 'opacity-100' : 'opacity-0'}`}
+      >
         {windowSize.width > 0 && (
           <Globe
             ref={globeRef}
+            onGlobeReady={() => {
+              if (globeRef.current) {
+                globeRef.current.pointOfView({ lat: 20, lng: -90, altitude: 1.2 }, 0);
+                requestAnimationFrame(() => {
+                  setTimeout(() => setIsReady(true), 100);
+                });
+              }
+            }}
             width={windowSize.width}
             height={windowSize.height}
             backgroundColor="rgba(0,0,0,0)"
             globeImageUrl={blackTexture}
-            polygonsData={countries.features}
+            polygonsData={countriesData.features}
             polygonAltitude={(d: any) => isUkraine(d) ? 0.025 : 0.005}
             polygonCapColor={(d: any) => isUkraine(d) ? "rgba(255, 255, 255, 0.9)" : "rgba(20, 20, 20, 0.8)"}
             polygonSideColor={() => "rgba(0,0,0,0.5)"}
