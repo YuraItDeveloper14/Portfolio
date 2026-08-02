@@ -18,8 +18,8 @@ export default function Footer() {
         {/* Links */}
         <div className="flex items-center gap-6">
           <FooterLink href="https://github.com/YuraItDeveloper14" text="GitHub" />
-          <FooterLink href="https://www.linkedin.com/in/%D1%8E%D1%80%D1%87%D0%B8%D0%BA-0b550030b" text="LinkedIn" />
-          <FooterLink href="https://t.me/ydmytrenko14" text="Telegram" />
+          <FooterLink href="https://www.linkedin.com/in/yurii-dmytrenko-0b550030b" text="LinkedIn" />
+          <FooterLink href="https://t.me/yurochek1" text="Telegram" />
         </div>
         
         {/* Copyright */}
