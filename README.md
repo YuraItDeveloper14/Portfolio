@@ -1,3 +1,6 @@
+
+<!-- badges -->
+[![CI](https://github.com/YuraItDeveloper14/Portfolio/actions/workflows/build.yml/badge.svg)](https://github.com/YuraItDeveloper14/Portfolio/actions/workflows/build.yml) [![License](https://img.shields.io/github/license/YuraItDeveloper14/Portfolio?color=blue)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/YuraItDeveloper14/Portfolio)](https://github.com/YuraItDeveloper14/Portfolio/commits)
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
